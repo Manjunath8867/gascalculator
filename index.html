@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GasCalc</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>GasCalc</h1>
+        <p>Created by Manjunath, PeenyaGas Bangalore</p>
+    </header>
+    <main>
+        <form id="calculator-form">
+            <label for="gas-type">Gas Type:</label>
+            <select id="gas-type">
+                <option value="nitrogen">Nitrogen</option>
+                <option value="oxygen">Oxygen</option>
+            </select>
+            <label for="input-value">Input Value:</label>
+            <input type="number" id="input-value" required>
+            <label for="input-unit">Input Unit:</label>
+            <select id="input-unit">
+                <option value="liters">Liters</option>
+                <option value="cubic-meters">Cubic Meters</option>
+            </select>
+            <label for="output-unit">Output Unit:</label>
+            <select id="output-unit">
+                <option value="kilograms">Kilograms</option>
+            </select>
+            <button type="submit">Convert</button>
+        </form>
+        <div id="result"></div>
+    </main>
+    <footer>
+        <p>Created by Manjunath, PeenyaGas Bangalore</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
+
