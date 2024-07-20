@@ -6,7 +6,11 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
     const inputUnit = document.getElementById('input-unit').value;
     const outputUnit = document.getElementById('output-unit').value;
 
-    // Molecular weights for different gases
+    if (isNaN(inputValue) || inputValue <= 0) {
+        document.getElementById('result').innerText = 'Please enter a valid input value.';
+        return;
+    }
+
     const molecularWeights = {
         'nitrogen': 28.02,
         'oxygen': 32.00,
