@@ -9,34 +9,39 @@
 <body>
     <header>
         <h1>GasCalc</h1>
-        <p>Created by Manjunath, PeenyaGas Bangalore</p>
     </header>
     <main>
         <form id="calculator-form">
-            <label for="gas-type">Gas Type:</label>
+            <label for="gas-type">Select Gas Type:</label>
             <select id="gas-type">
                 <option value="nitrogen">Nitrogen</option>
                 <option value="oxygen">Oxygen</option>
+                <option value="helium">Helium</option>
+                <option value="argon">Argon</option>
             </select>
+
             <label for="input-value">Input Value:</label>
             <input type="number" id="input-value" required>
+
             <label for="input-unit">Input Unit:</label>
             <select id="input-unit">
-                <option value="liters">Liters</option>
                 <option value="cubic-meters">Cubic Meters</option>
-            </select>
-            <label for="output-unit">Output Unit:</label>
-            <select id="output-unit">
                 <option value="kilograms">Kilograms</option>
             </select>
-            <button type="submit">Convert</button>
+
+            <label for="output-unit">Output Unit:</label>
+            <select id="output-unit">
+                <option value="cubic-meters">Cubic Meters</option>
+                <option value="kilograms">Kilograms</option>
+            </select>
+
+            <button type="submit">Calculate</button>
         </form>
         <div id="result"></div>
     </main>
     <footer>
-        <p>Created by Manjunath, PeenyaGas Bangalore</p>
+        Created by Manjunath, PeenyaGas Bangalore
     </footer>
     <script src="script.js"></script>
 </body>
 </html>
-

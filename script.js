@@ -6,17 +6,36 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
     const inputUnit = document.getElementById('input-unit').value;
     const outputUnit = document.getElementById('output-unit').value;
 
-    let conversionFactor;
+    // Molecular weights for different gases
+    const molecularWeights = {
+        'nitrogen': 28.02,
+        'oxygen': 32.00,
+        'helium': 4.00,
+        'argon': 39.95
+    };
 
-    // Define conversion factors for different gases and units
-    if (gasType === 'nitrogen') {
-        if (inputUnit === 'liters' && outputUnit === 'kilograms') {
-            conversionFactor = 0.0012506; // Example conversion factor
-        } else if (inputUnit === 'cubic-meters' && outputUnit === 'kilograms') {
-            conversionFactor = 1.2506; // Example conversion factor
-        }
+    function calculateDensity(molecularWeight) {
+        return molecularWeight / 24.63;
     }
 
-    const result = inputValue * conversionFactor;
-    document.getElementById('result').innerText = `Result: ${result} ${outputUnit}`;
+    function convertToKg(cubicMeters, molecularWeight) {
+        const density = calculateDensity(molecularWeight);
+        return cubicMeters * density;
+    }
+
+    function convertToCubicMeters(kg, molecularWeight) {
+        const density = calculateDensity(molecularWeight);
+        return kg / density;
+    }
+
+    let result;
+    const molecularWeight = molecularWeights[gasType];
+
+    if (inputUnit === 'cubic-meters' && outputUnit === 'kilograms') {
+        result = convertToKg(inputValue, molecularWeight);
+    } else if (inputUnit === 'kilograms' && outputUnit === 'cubic-meters') {
+        result = convertToCubicMeters(inputValue, molecularWeight);
+    }
+
+    document.getElementById('result').innerText = `Result: ${result.toFixed(4)} ${outputUnit}`;
 });

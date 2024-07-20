@@ -3,13 +3,18 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    color: #333;
 }
 
 header, footer {
-    background-color: #333;
+    background-color: #005f6a;
     color: white;
     text-align: center;
-    padding: 1em;
+    padding: 1em 0;
+}
+
+header h1, footer p {
+    margin: 0;
 }
 
 main {
@@ -23,6 +28,8 @@ form {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: inline-block;
+    max-width: 400px;
+    width: 100%;
 }
 
 label, select, input, button {
@@ -32,7 +39,7 @@ label, select, input, button {
 }
 
 button {
-    background-color: #333;
+    background-color: #005f6a;
     color: white;
     border: none;
     padding: 1em;
@@ -40,6 +47,11 @@ button {
     cursor: pointer;
 }
 
+button:hover {
+    background-color: #00474d;
+}
+
 #result {
     margin-top: 1em;
+    font-weight: bold;
 }
