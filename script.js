@@ -61,6 +61,11 @@ document.getElementById('calculator-form').addEventListener('submit', function(e
     let result;
     const molecularWeight = molecularWeights[gasType];
 
+    if (!molecularWeight) {
+        document.getElementById('result').innerText = 'Gas type not found.';
+        return;
+    }
+
     if (inputUnit === 'cubic-meters' && outputUnit === 'kilograms') {
         result = convertToKg(inputValue, molecularWeight);
     } else if (inputUnit === 'kilograms' && outputUnit === 'cubic-meters') {
