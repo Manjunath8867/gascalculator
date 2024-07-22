@@ -4,75 +4,207 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gas Calculators</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            overflow: hidden;
+        }
+        #gas-filler-calculator, #unit-converter-calculator {
+            background: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #00796b;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #00796b;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #004d40;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Gas Calculators</h1>
-    </header>
-    <main>
-        <section>
-            <h2>Component Weight and Pressure Calculator</h2>
-            <form id="weight-pressure-form">
-                <label for="comp1">Component 1:</label>
-                <select id="comp1" required>
-                    <!-- Add at least 25 gases here -->
-                </select>
-                <input type="number" id="comp1-conc" placeholder="% of Component 1" required>
+    <div class="container">
+        <div id="gas-filler-calculator">
+            <h2>Gas Filler Calculator</h2>
+            <label for="component1">Select Component 1:</label>
+            <select id="component1"></select>
+            <label for="component1-percentage">Component 1 Concentration (%):</label>
+            <input type="number" id="component1-percentage" min="0" max="100">
 
-                <label for="comp2">Component 2:</label>
-                <select id="comp2" required>
-                    <!-- Add at least 25 gases here -->
-                </select>
-                <input type="number" id="comp2-conc" placeholder="% of Component 2" required>
+            <label for="component2">Select Component 2:</label>
+            <select id="component2"></select>
+            <label for="component2-percentage">Component 2 Concentration (%):</label>
+            <input type="number" id="component2-percentage" min="0" max="100">
 
-                <label for="comp3">Component 3:</label>
-                <select id="comp3">
-                    <!-- Add at least 25 gases here -->
-                </select>
-                <input type="number" id="comp3-conc" placeholder="% of Component 3">
+            <label for="component3">Select Component 3:</label>
+            <select id="component3"></select>
+            <label for="component3-percentage">Component 3 Concentration (%):</label>
+            <input type="number" id="component3-percentage" min="0" max="100">
 
-                <label for="wc">WC (L):</label>
-                <input type="number" id="wc" required>
+            <label for="wc">Water Capacity (L):</label>
+            <input type="number" id="wc">
 
-                <label for="pressure">Pressure (KG/CM2):</label>
-                <input type="number" id="pressure" required>
+            <label for="pressure">Pressure (kg/cm²):</label>
+            <input type="number" id="pressure">
 
-                <button type="submit">Calculate</button>
-            </form>
-            <div id="weight-pressure-result"></div>
-        </section>
-        <section>
-            <h2>Gas Unit Converter</h2>
-            <form id="converter-form">
-                <label for="gas-type">Gas:</label>
-                <select id="gas-type" required>
-                    <!-- Add gases here -->
-                </select>
+            <button onclick="calculateGasFiller()">Calculate</button>
+            <div id="gas-filler-result" class="result"></div>
+        </div>
 
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" placeholder="Enter quantity" required>
+        <div id="unit-converter-calculator">
+            <h2>Unit Converter Calculator</h2>
+            <label for="gas">Select Gas:</label>
+            <select id="gas"></select>
 
-                <label for="from-unit">From:</label>
-                <select id="from-unit" required>
-                    <option value="kg">KG</option>
-                    <option value="m3">M3</option>
-                </select>
+            <label for="conversion-type">Conversion Type:</label>
+            <select id="conversion-type">
+                <option value="kg-to-m3">Kg to m³</option>
+                <option value="m3-to-kg">m³ to Kg</option>
+            </select>
 
-                <label for="to-unit">To:</label>
-                <select id="to-unit" required>
-                    <option value="kg">KG</option>
-                    <option value="m3">M3</option>
-                </select>
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity">
 
-                <button type="submit">Convert</button>
-            </form>
-            <div id="converter-result"></div>
-        </section>
-    </main>
-    <footer>
-        Created by Manjunath, PeenyaGas Bangalore
-    </footer>
-    <script src="script.js"></script>
+            <button onclick="convertUnits()">Convert</button>
+            <div id="unit-converter-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const gases = [
+            { name: "Argon", molecularWeight: 39.948 },
+            { name: "Hydrogen", molecularWeight: 2.016 },
+            { name: "Oxygen", molecularWeight: 32.00 },
+            { name: "Carbon Dioxide", molecularWeight: 44.01 },
+            // Add more gases here...
+            { name: "Nitrogen", molecularWeight: 28.014 },
+            { name: "Methane", molecularWeight: 16.04 },
+            { name: "Helium", molecularWeight: 4.0026 },
+            { name: "Neon", molecularWeight: 20.18 },
+            { name: "Krypton", molecularWeight: 83.798 },
+            { name: "Xenon", molecularWeight: 131.29 },
+            { name: "Sulfur Hexafluoride", molecularWeight: 146.06 },
+            { name: "Ammonia", molecularWeight: 17.031 },
+            { name: "Chlorine", molecularWeight: 70.906 },
+            { name: "Fluorine", molecularWeight: 18.998 },
+            { name: "Hydrogen Chloride", molecularWeight: 36.46 },
+            { name: "Nitrous Oxide", molecularWeight: 44.013 },
+            { name: "Propane", molecularWeight: 44.097 },
+            { name: "Butane", molecularWeight: 58.124 },
+            { name: "Ethane", molecularWeight: 30.07 },
+            { name: "Ethylene", molecularWeight: 28.054 },
+            { name: "Acetylene", molecularWeight: 26.04 },
+            { name: "Bromine", molecularWeight: 159.808 },
+            { name: "Iodine", molecularWeight: 253.808 },
+            { name: "Carbon Monoxide", molecularWeight: 28.01 },
+            { name: "Hydrogen Sulfide", molecularWeight: 34.08 },
+            { name: "Phosgene", molecularWeight: 98.92 },
+            { name: "Methyl Chloride", molecularWeight: 50.49 },
+            { name: "Chloromethane", molecularWeight: 50.49 }
+        ];
+
+        const gasDropdown1 = document.getElementById('component1');
+        const gasDropdown2 = document.getElementById('component2');
+        const gasDropdown3 = document.getElementById('component3');
+        const gasDropdownConverter = document.getElementById('gas');
+
+        gases.forEach(gas => {
+            const option1 = document.createElement('option');
+            option1.value = gas.molecularWeight;
+            option1.text = gas.name;
+            gasDropdown1.add(option1);
+
+            const option2 = option1.cloneNode(true);
+            gasDropdown2.add(option2);
+
+            const option3 = option1.cloneNode(true);
+            gasDropdown3.add(option3);
+
+            const optionConverter = option1.cloneNode(true);
+            gasDropdownConverter.add(optionConverter);
+        });
+
+        function calculateGasFiller() {
+            const wc = parseFloat(document.getElementById('wc').value);
+            const pressure = parseFloat(document.getElementById('pressure').value);
+            const comp1Percentage = parseFloat(document.getElementById('component1-percentage').value);
+            const comp2Percentage = parseFloat(document.getElementById('component2-percentage').value);
+            const comp3Percentage = parseFloat(document.getElementById('component3-percentage').value);
+
+            if ((comp1Percentage + comp2Percentage + comp3Percentage) !== 100) {
+                alert("The total percentage of components must equal 100%");
+                return;
+            }
+
+            const comp1MolecularWeight = parseFloat(document.getElementById('component1').value);
+            const comp2MolecularWeight = parseFloat(document.getElementById('component2').value);
+            const comp3MolecularWeight = parseFloat(document.getElementById('component3').value);
+
+            const comp1Weight = pressure * wc * comp1MolecularWeight * (comp1Percentage / 100) * 0.0402;
+            const comp2Weight = pressure * wc * comp2MolecularWeight * (comp2Percentage / 100) * 0.0402;
+            const comp3Weight = pressure * wc * comp3MolecularWeight * (comp3Percentage / 100) * 0.0402;
+
+            const comp1Pressure = pressure * (comp1Percentage / 100);
+            const comp2Pressure = pressure * (comp2Percentage / 100);
+            const comp3Pressure = pressure * (comp3Percentage / 100);
+
+            document.getElementById('gas-filler-result').innerHTML = `
+                Component 1 Weight: ${comp1Weight.toFixed(2)} kg, Pressure: ${comp1Pressure.toFixed(2)} kg/cm²<br>
+                Component 2 Weight: ${comp2Weight.toFixed(2)} kg, Pressure: ${comp2Pressure.toFixed(2)} kg/cm²<br>
+                Component 3 Weight: ${comp3Weight.toFixed(2)} kg, Pressure: ${comp3Pressure.toFixed(2)} kg/cm²
+            `;
+        }
+
+        function convertUnits() {
+            const gasMolecularWeight = parseFloat(document.getElementById('gas').value);
+            const conversionType = document.getElementById('conversion-type').value;
+            const quantity = parseFloat(document.getElementById('quantity').value);
+
+            const density = gasMolecularWeight / 24.63;
+            let result;
+
+            if (conversionType === 'kg-to-m3') {
+                result = quantity / density;
+                document.getElementById('unit-converter-result').innerHTML = `${quantity} kg is ${result.toFixed(2)} m³`;
+            } else if (conversionType === 'm3-to-kg') {
+                result = quantity * density;
+                document.getElementById('unit-converter-result').innerHTML = `${quantity} m³ is ${result.toFixed(2)} kg`;
+            }
+        }
+    </script>
 </body>
 </html>
