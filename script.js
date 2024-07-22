@@ -1,76 +1,52 @@
 document.getElementById('calculator-form').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const gasType = document.getElementById('gas-type').value;
-    const inputValue = parseFloat(document.getElementById('input-value').value);
-    const inputUnit = document.getElementById('input-unit').value;
-    const outputUnit = document.getElementById('output-unit').value;
+    const comp1 = document.getElementById('comp1').value;
+    const comp1Conc = parseFloat(document.getElementById('comp1-conc').value);
+    const comp2 = document.getElementById('comp2').value;
+    const comp2Conc = parseFloat(document.getElementById('comp2-conc').value);
+    const comp3 = document.getElementById('comp3').value;
+    const comp3Conc = parseFloat(document.getElementById('comp3-conc').value || 0);
+    const wc = parseFloat(document.getElementById('wc').value);
+    const pressure = parseFloat(document.getElementById('pressure').value);
 
-    if (isNaN(inputValue) || inputValue <= 0) {
-        document.getElementById('result').innerText = 'Please enter a valid input value.';
+    if (isNaN(comp1Conc) || isNaN(comp2Conc) || isNaN(wc) || isNaN(pressure) || comp1Conc <= 0 || comp2Conc <= 0 || wc <= 0 || pressure <= 0) {
+        document.getElementById('result').innerText = 'Please enter valid input values.';
         return;
     }
 
-    const molecularWeights = {
-        'nitrogen': 28.02,
-        'oxygen': 32.00,
-        'helium': 4.00,
-        'argon': 39.95,
-        'hydrogen': 2.02,
-        'carbon-dioxide': 44.01,
-        'methane': 16.04,
-        'ethane': 30.07,
-        'propane': 44.10,
-        'butane': 58.12,
-        'ammonia': 17.03,
-        'sulfur-hexafluoride': 146.06,
-        'neon': 20.18,
-        'krypton': 83.80,
-        'xenon': 131.29,
-        'chlorine': 70.90,
-        'fluorine': 38.00,
-        'phosphine': 34.00,
-        'diborane': 27.67,
-        'nitrous-oxide': 44.01,
-        'ethylene': 28.05,
-        'acetylene': 26.04,
-        'carbon-monoxide': 28.01,
-        'bromine': 159.80,
-        'iodine': 253.80,
-        'hydrogen-chloride': 36.46,
-        'hydrogen-fluoride': 20.01,
-        'silane': 32.12,
-        'tetrafluoromethane': 88.00,
-        'sulfur-dioxide': 64.07
+    const gasData = {
+        'AR': { molarWeight: 39.948 },
+        'H2': { molarWeight: 2.016 },
+        'O2': { molarWeight: 32.00 },
+        'CO2': { molarWeight: 44.01 },
+        'N2': { molarWeight: 28.014 },
+        'Ethylene': { molarWeight: 28.054 }
+        // Add more gases as needed
     };
 
-    function calculateDensity(molecularWeight) {
-        return molecularWeight / 24.63;
-    }
+    const calculateWeight = (comp, conc) => {
+        return pressure * wc * gasData[comp].molarWeight * (conc / 100) * 0.0402;
+    };
 
-    function convertToKg(cubicMeters, molecularWeight) {
-        const density = calculateDensity(molecularWeight);
-        return cubicMeters * density;
-    }
+    const calculateComponentPressure = (totalPressure, conc) => {
+        return totalPressure * (conc / 100);
+    };
 
-    function convertToCubicMeters(kg, molecularWeight) {
-        const density = calculateDensity(molecularWeight);
-        return kg / density;
-    }
+    const weightComp1 = calculateWeight(comp1, comp1Conc);
+    const weightComp2 = calculateWeight(comp2, comp2Conc);
+    const weightComp3 = comp3Conc > 0 ? calculateWeight(comp3, comp3Conc) : 0;
 
-    let result;
-    const molecularWeight = molecularWeights[gasType];
+    const pressureComp1 = calculateComponentPressure(pressure, comp1Conc);
+    const pressureComp2 = calculateComponentPressure(pressure, comp2Conc);
+    const pressureComp3 = comp3Conc > 0 ? calculateComponentPressure(pressure, comp3Conc) : 0;
 
-    if (!molecularWeight) {
-        document.getElementById('result').innerText = 'Gas type not found.';
-        return;
-    }
-
-    if (inputUnit === 'cubic-meters' && outputUnit === 'kilograms') {
-        result = convertToKg(inputValue, molecularWeight);
-    } else if (inputUnit === 'kilograms' && outputUnit === 'cubic-meters') {
-        result = convertToCubicMeters(inputValue, molecularWeight);
-    }
-
-    document.getElementById('result').innerText = `Result: ${result.toFixed(4)} ${outputUnit}`;
+    document.getElementById('result').innerHTML = `
+        <p>Component 1 Weight: ${weightComp1.toFixed(2)} KG</p>
+        <p>Component 1 Pressure: ${pressureComp1.toFixed(2)} KG/CM2</p>
+        <p>Component 2 Weight: ${weightComp2.toFixed(2)} KG</p>
+        <p>Component 2 Pressure: ${pressureComp2.toFixed(2)} KG/CM2</p>
+        ${comp3Conc > 0 ? `<p>Component 3 Weight: ${weightComp3.toFixed(2)} KG</p>` : ''}
+        ${comp3Conc > 0 ? `<p>Component 3 Pressure: ${pressureComp3.toFixed(2)} KG/CM2</p>` : ''}
+    `;
 });
