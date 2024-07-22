@@ -1,58 +1,63 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Populate gas type dropdown
     const gases = {
-        'AR': { molarWeight: 39.948, density: 1.784 },
-        'H2': { molarWeight: 2.016, density: 0.08988 },
-        'O2': { molarWeight: 32.00, density: 1.429 },
-        'CO2': { molarWeight: 44.01, density: 1.977 },
-        'N2': { molarWeight: 28.014, density: 1.251 },
-        'Ethylene': { molarWeight: 28.054, density: 1.178 }
-        // Add more gases as needed
+        'AR+H2(95:5)': { molecularWeight: 39.948 * 0.95 + 2 * 0.05 },
+        'AR+O2(98:2)': { molecularWeight: 39.948 * 0.98 + 32 * 0.02 },
+        // Add all other gases here
+        'N2': { molecularWeight: 28.014 },
+        'O2': { molecularWeight: 32 },
+        'H2': { molecularWeight: 2 },
+        // Continue adding gases...
     };
 
+    const comp1Select = document.getElementById('comp1');
+    const comp2Select = document.getElementById('comp2');
+    const comp3Select = document.getElementById('comp3');
     const gasTypeSelect = document.getElementById('gas-type');
-    for (const gas in gases) {
+
+    Object.keys(gases).forEach(gas => {
         const option = document.createElement('option');
         option.value = gas;
         option.text = gas;
-        gasTypeSelect.add(option);
-    }
+        comp1Select.add(option.cloneNode(true));
+        comp2Select.add(option.cloneNode(true));
+        comp3Select.add(option.cloneNode(true));
+        gasTypeSelect.add(option.cloneNode(true));
+    });
 
-    // Component calculator form submission
-    document.getElementById('component-calculator-form').addEventListener('submit', function(e) {
+    // Weight and Pressure Calculator form submission
+    document.getElementById('weight-pressure-form').addEventListener('submit', function(e) {
         e.preventDefault();
 
         const comp1 = document.getElementById('comp1').value;
-        const comp1Conc = parseFloat(document.getElementById('comp1-conc').value);
+        const comp1Conc = parseFloat(document.getElementById('comp1-conc').value) || 0;
         const comp2 = document.getElementById('comp2').value;
-        const comp2Conc = parseFloat(document.getElementById('comp2-conc').value);
+        const comp2Conc = parseFloat(document.getElementById('comp2-conc').value) || 0;
         const comp3 = document.getElementById('comp3').value;
-        const comp3Conc = parseFloat(document.getElementById('comp3-conc').value || 0);
+        const comp3Conc = parseFloat(document.getElementById('comp3-conc').value) || 0;
         const wc = parseFloat(document.getElementById('wc').value);
         const pressure = parseFloat(document.getElementById('pressure').value);
 
-        if (isNaN(comp1Conc) || isNaN(comp2Conc) || isNaN(wc) || isNaN(pressure) || comp1Conc <= 0 || comp2Conc <= 0 || wc <= 0 || pressure <= 0) {
-            document.getElementById('component-result').innerText = 'Please enter valid input values.';
+        const totalConc = comp1Conc + comp2Conc + comp3Conc;
+
+        if (totalConc !== 100) {
+            alert('The total percentage of components must be 100%.');
             return;
         }
 
-        const calculateWeight = (comp, conc) => {
-            return pressure * wc * gases[comp].molarWeight * (conc / 100) * 0.0402;
-        };
+        const calcWeight = (pressure, wc, molecularWeight, conc) => 
+            pressure * wc * molecularWeight * (conc / 100) * 0.0402;
 
-        const calculateComponentPressure = (totalPressure, conc) => {
-            return totalPressure * (conc / 100);
-        };
+        const weightComp1 = calcWeight(pressure, wc, gases[comp1].molecularWeight, comp1Conc);
+        const weightComp2 = calcWeight(pressure, wc, gases[comp2].molecularWeight, comp2Conc);
+        const weightComp3 = calcWeight(pressure, wc, gases[comp3]?.molecularWeight, comp3Conc || 0);
 
-        const weightComp1 = calculateWeight(comp1, comp1Conc);
-        const weightComp2 = calculateWeight(comp2, comp2Conc);
-        const weightComp3 = comp3Conc > 0 ? calculateWeight(comp3, comp3Conc) : 0;
+        const calcPressure = (pressure, conc) => pressure * (conc / 100);
 
-        const pressureComp1 = calculateComponentPressure(pressure, comp1Conc);
-        const pressureComp2 = calculateComponentPressure(pressure, comp2Conc);
-        const pressureComp3 = comp3Conc > 0 ? calculateComponentPressure(pressure, comp3Conc) : 0;
+        const pressureComp1 = calcPressure(pressure, comp1Conc);
+        const pressureComp2 = calcPressure(pressure, comp2Conc);
+        const pressureComp3 = calcPressure(pressure, comp3Conc);
 
-        document.getElementById('component-result').innerHTML = `
+        document.getElementById('weight-pressure-result').innerHTML = `
             <p>Component 1 Weight: ${weightComp1.toFixed(2)} KG</p>
             <p>Component 1 Pressure: ${pressureComp1.toFixed(2)} KG/CM2</p>
             <p>Component 2 Weight: ${weightComp2.toFixed(2)} KG</p>
@@ -76,28 +81,21 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const convert = (gas, qty, from, to) => {
-            const density = gases[gas].density;
+        const density = 1 / (gases[gas].molecularWeight / 24.63);
+
+        const convert = (qty, from, to, density) => {
             let convertedQty = qty;
 
             if (from === 'kg' && to === 'm3') {
                 convertedQty = qty / density;
             } else if (from === 'm3' && to === 'kg') {
                 convertedQty = qty * density;
-            } else if (from === 'ltr' && to === 'm3') {
-                convertedQty = qty / 1000;
-            } else if (from === 'm3' && to === 'ltr') {
-                convertedQty = qty * 1000;
-            } else if (from === 'kg' && to === 'ltr') {
-                convertedQty = (qty / density) * 1000;
-            } else if (from === 'ltr' && to === 'kg') {
-                convertedQty = (qty / 1000) * density;
             }
 
             return convertedQty;
         };
 
-        const result = convert(gas, quantity, fromUnit, toUnit);
+        const result = convert(quantity, fromUnit, toUnit, density);
         document.getElementById('converter-result').innerHTML = `
             <p>${quantity} ${fromUnit} of ${gas} is equal to ${result.toFixed(2)} ${toUnit}</p>
         `;
