@@ -12,66 +12,104 @@
         <h1>GasCalc</h1>
     </header>
     <main class="container">
-        <form id="calculator-form" class="border p-4 rounded bg-light">
-            <div class="form-group">
-                <label for="comp1">Select Component 1:</label>
-                <select id="comp1" class="form-control">
-                    <option value="AR">Argon (AR)</option>
-                    <option value="H2">Hydrogen (H2)</option>
-                    <option value="O2">Oxygen (O2)</option>
-                    <option value="CO2">Carbon Dioxide (CO2)</option>
-                    <option value="N2">Nitrogen (N2)</option>
-                    <option value="Ethylene">Ethylene</option>
-                    <!-- Add more gases as needed -->
-                </select>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Component Weight and Pressure Calculator</h3>
+                <form id="component-calculator-form" class="border p-4 rounded bg-light">
+                    <div class="form-group">
+                        <label for="comp1">Select Component 1:</label>
+                        <select id="comp1" class="form-control">
+                            <option value="AR">Argon (AR)</option>
+                            <option value="H2">Hydrogen (H2)</option>
+                            <option value="O2">Oxygen (O2)</option>
+                            <option value="CO2">Carbon Dioxide (CO2)</option>
+                            <option value="N2">Nitrogen (N2)</option>
+                            <option value="Ethylene">Ethylene</option>
+                            <!-- Add more gases as needed -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="comp1-conc">Component 1 Concentration (%):</label>
+                        <input type="number" id="comp1-conc" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="comp2">Select Component 2:</label>
+                        <select id="comp2" class="form-control">
+                            <option value="AR">Argon (AR)</option>
+                            <option value="H2">Hydrogen (H2)</option>
+                            <option value="O2">Oxygen (O2)</option>
+                            <option value="CO2">Carbon Dioxide (CO2)</option>
+                            <option value="N2">Nitrogen (N2)</option>
+                            <option value="Ethylene">Ethylene</option>
+                            <!-- Add more gases as needed -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="comp2-conc">Component 2 Concentration (%):</label>
+                        <input type="number" id="comp2-conc" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="comp3">Select Component 3:</label>
+                        <select id="comp3" class="form-control">
+                            <option value="AR">Argon (AR)</option>
+                            <option value="H2">Hydrogen (H2)</option>
+                            <option value="O2">Oxygen (O2)</option>
+                            <option value="CO2">Carbon Dioxide (CO2)</option>
+                            <option value="N2">Nitrogen (N2)</option>
+                            <option value="Ethylene">Ethylene</option>
+                            <!-- Add more gases as needed -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="comp3-conc">Component 3 Concentration (%):</label>
+                        <input type="number" id="comp3-conc" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="wc">WC (L):</label>
+                        <input type="number" id="wc" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pressure">Pressure (KG/CM2):</label>
+                        <input type="number" id="pressure" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Calculate</button>
+                </form>
+                <div id="component-result" class="text-center my-4"></div>
             </div>
-            <div class="form-group">
-                <label for="comp1-conc">Component 1 Concentration (%):</label>
-                <input type="number" id="comp1-conc" class="form-control" required>
+            <div class="col-md-6">
+                <h3>Gas Unit Converter</h3>
+                <form id="converter-form" class="border p-4 rounded bg-light">
+                    <div class="form-group">
+                        <label for="gas-type">Gas Type:</label>
+                        <select id="gas-type" class="form-control">
+                            <!-- Populate with gas options dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" id="quantity" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="from-unit">From Unit:</label>
+                        <select id="from-unit" class="form-control">
+                            <option value="kg">Kilograms (kg)</option>
+                            <option value="m3">Cubic Meters (m³)</option>
+                            <option value="ltr">Liters (ltr)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="to-unit">To Unit:</label>
+                        <select id="to-unit" class="form-control">
+                            <option value="kg">Kilograms (kg)</option>
+                            <option value="m3">Cubic Meters (m³)</option>
+                            <option value="ltr">Liters (ltr)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Convert</button>
+                </form>
+                <div id="converter-result" class="text-center my-4"></div>
             </div>
-            <div class="form-group">
-                <label for="comp2">Select Component 2:</label>
-                <select id="comp2" class="form-control">
-                    <option value="AR">Argon (AR)</option>
-                    <option value="H2">Hydrogen (H2)</option>
-                    <option value="O2">Oxygen (O2)</option>
-                    <option value="CO2">Carbon Dioxide (CO2)</option>
-                    <option value="N2">Nitrogen (N2)</option>
-                    <option value="Ethylene">Ethylene</option>
-                    <!-- Add more gases as needed -->
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="comp2-conc">Component 2 Concentration (%):</label>
-                <input type="number" id="comp2-conc" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="comp3">Select Component 3:</label>
-                <select id="comp3" class="form-control">
-                    <option value="AR">Argon (AR)</option>
-                    <option value="H2">Hydrogen (H2)</option>
-                    <option value="O2">Oxygen (O2)</option>
-                    <option value="CO2">Carbon Dioxide (CO2)</option>
-                    <option value="N2">Nitrogen (N2)</option>
-                    <option value="Ethylene">Ethylene</option>
-                    <!-- Add more gases as needed -->
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="comp3-conc">Component 3 Concentration (%):</label>
-                <input type="number" id="comp3-conc" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="wc">WC (L):</label>
-                <input type="number" id="wc" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="pressure">Pressure (KG/CM2):</label>
-                <input type="number" id="pressure" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Calculate</button>
-        </form>
-        <div id="result" class="text-center my-4"></div>
+        </div>
     </main>
     <footer class="text-center my-4">
         Created by Manjunath, PeenyaGas Bangalore
